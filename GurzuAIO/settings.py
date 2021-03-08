@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/3.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
+import os
 
 from pathlib import Path
 
@@ -24,6 +25,7 @@ SECRET_KEY = 'r991@rj_@e&h_(n62tm-ly^fohtg0+8&8mto8g^r72o%by()o3'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+SITE_ID =2
 
 ALLOWED_HOSTS = []
 
@@ -31,12 +33,24 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+'django.contrib.sites',
     'django.contrib.admin',
     'django.contrib.auth',
+    'mattermost_auth',
+    'gmail_api',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'rest_framework.authtoken',
+    'dj_rest_auth',
+
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'dj_rest_auth.registration',
+    'allauth.socialaccount.providers.google',
 ]
 
 MIDDLEWARE = [
@@ -50,6 +64,15 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'GurzuAIO.urls'
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'dj_rest_auth.jwt_auth.JWTCookieAuthentication',
+    )
+}
+
+JWT_AUTH_COOKIE = 'gurzuAIO--auth'
+
+REST_USE_JWT = True
 
 TEMPLATES = [
     {
@@ -76,8 +99,13 @@ WSGI_APPLICATION = 'GurzuAIO.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'gurzu_aio',                 # Or path to database file if using sqlite3.
+        # The following settings are not used with sqlite3:
+        'USER': 'root',
+        'PASSWORD': '',
+        'HOST': 'localhost',                 # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
+        'PORT': '3306'  ,
     }
 }
 
